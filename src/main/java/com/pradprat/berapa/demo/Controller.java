@@ -46,7 +46,7 @@ public class Controller {
                 if (event instanceof MessageEvent) {
                     MessageEvent messageEvent = (MessageEvent) event;
                     TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
-                    replyText(messageEvent.getReplyToken(), textMessageContent.getText());
+                     replyText(messageEvent.getReplyToken(), textMessageContent.getText());
                 }
             });
 

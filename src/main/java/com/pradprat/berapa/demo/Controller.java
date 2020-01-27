@@ -44,6 +44,7 @@ public class Controller {
 
             eventsModel.getEvents().forEach((event)->{
                 if (event instanceof MessageEvent) {
+                    //tambah
                     MessageEvent messageEvent = (MessageEvent) event;
                     TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
                     replyText(messageEvent.getReplyToken(), textMessageContent.getText());

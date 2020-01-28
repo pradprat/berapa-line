@@ -46,7 +46,13 @@ public class Controller {
                 if (event instanceof MessageEvent) {
                     MessageEvent messageEvent = (MessageEvent) event;
                     TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
-                     replyText(messageEvent.getReplyToken(), textMessageContent.getText());
+
+                    if(textMessageContent.getText().equals("hai")){
+                        replyText(messageEvent.getReplyToken(), "bacod");
+                    }else{
+                        replyText(messageEvent.getReplyToken(), textMessageContent.getText());
+                    }
+
                 }
             });
 

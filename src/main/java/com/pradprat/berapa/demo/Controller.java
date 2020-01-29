@@ -49,6 +49,8 @@ public class Controller {
 
                     if(textMessageContent.getText().equals("hai")){
                         replyText(messageEvent.getReplyToken(), "bacod");
+                    }if(textMessageContent.getText().contains("berapa")) {
+                        replyText(messageEvent.getReplyToken(), new Berapa().getFinalPrice(textMessageContent.getText()));
                     }else{
                         replyText(messageEvent.getReplyToken(), textMessageContent.getText());
                     }

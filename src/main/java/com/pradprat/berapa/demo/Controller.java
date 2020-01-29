@@ -6,8 +6,11 @@ import com.linecorp.bot.client.LineSignatureValidator;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.message.FlexMessage;
 import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.message.flex.container.FlexContainer;
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -47,11 +50,15 @@ public class Controller {
                     MessageEvent messageEvent = (MessageEvent) event;
                     TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
 
-                    if(textMessageContent.getText().equals("hai")){
+                    if (textMessageContent.getText().equals("hai")) {
                         replyText(messageEvent.getReplyToken(), "bacod");
-                    }if(textMessageContent.getText().contains("berapa")) {
+                    }
+                    if (textMessageContent.getText().contains("berapa")) {
                         replyText(messageEvent.getReplyToken(), new Berapa().getFinalPrice(textMessageContent.getText()));
-                    }else{
+                    }
+                    if (textMessageContent.getText().equals("flex")) {
+                        replyFlexMessage(messageEvent.getReplyToken());
+                    } else {
                         replyText(messageEvent.getReplyToken(), textMessageContent.getText());
                     }
 
@@ -74,9 +81,24 @@ public class Controller {
     }
 
 
-    private void replyText(String replyToken, String messageToUser){
+    private void replyText(String replyToken, String messageToUser) {
         TextMessage textMessage = new TextMessage(messageToUser);
         ReplyMessage replyMessage = new ReplyMessage(replyToken, textMessage);
         reply(replyMessage);
+    }
+
+    private void replyFlexMessage(String replyToken) {
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("flex.json"));
+
+            ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
+            FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);
+
+            ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("Dicoding Academy", flexContainer));
+            reply(replyMessage);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

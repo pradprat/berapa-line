@@ -12,11 +12,11 @@
     ]
   },
   "hero": {
-    "type": "text",
-    "text": "Rp15.000.000,00",
-    "size": "md",
-    "color": "#c9302c",
-    "weight": "bold"
+    "type": "image",
+    "url": "https://www.dicoding.com/images/small/academy/menjadi_android_developer_expert_logo_041217105708.png",
+    "size": "full",
+    "aspectRatio": "4:3",
+    "aspectMode": "cover"
   },
   "body": {
     "type": "box",

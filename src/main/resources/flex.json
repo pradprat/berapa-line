@@ -15,9 +15,6 @@
             "text": "harga"
           },
           {
-            "type": "separator"
-          },
-          {
             "type": "text",
             "text": "Rp50.000,00"
           }
@@ -34,9 +31,6 @@
           {
             "type": "text",
             "text": "discont"
-          },
-          {
-            "type": "separator"
           },
           {
             "type": "text",

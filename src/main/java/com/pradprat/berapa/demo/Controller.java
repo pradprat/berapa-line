@@ -90,7 +90,7 @@ public class Controller {
     private void replyFlexMessage(String replyToken) {
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("flex.json"));
+            String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("berapa_flex.json"));
 
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
             FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);

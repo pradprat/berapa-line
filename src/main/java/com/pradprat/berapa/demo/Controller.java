@@ -55,7 +55,8 @@ public class Controller {
                         replyText(messageEvent.getReplyToken(), "bacod");
                     }
                     if (textMessageContent.getText().contains("berapa")) {
-                        replyText(messageEvent.getReplyToken(), new Berapa().getFinalPrice(textMessageContent.getText()));
+                        replyFlexMessage(messageEvent.getReplyToken(), new Berapa().getItems(textMessageContent.getText()));
+//                        replyText(messageEvent.getReplyToken(), new Berapa().getFinalPrice(textMessageContent.getText()));
                     }
                     if (textMessageContent.getText().equals("flex")) {
                         replyFlexMessage(messageEvent.getReplyToken(), new Berapa().getItems(textMessageContent.getText()));

@@ -21,9 +21,6 @@
         ]
       },
       {
-        "type": "separator"
-      },
-      {
         "type": "box",
         "layout": "horizontal",
         "spacing": "md",
@@ -37,11 +34,10 @@
             "text": "10%"
           }
         ]
-      }
-      ,
+      },
       {
         "type": "text",
-        "text": "Rp100.000.000"
+        "text": "Total harga yang harus dibayar Rp100.000.000"
       }
     ]
   }

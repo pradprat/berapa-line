@@ -63,7 +63,6 @@ public class Controller {
                     } else {
                         replyText(messageEvent.getReplyToken(), textMessageContent.getText());
                     }
-
                 }
             });
 
@@ -95,7 +94,7 @@ public class Controller {
             String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("berapa_flex.json"));
 
             flexTemplate = String.format(flexTemplate,
-                    items.get(0).getNumber(), items.get(1).getNumber(), items.get(2).getNumber()
+                    items.get(0).getNumber(), items.get(1).getNumber(), items.get(2).getNumber(), items.get(0).getNumber()
             );
 
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();

@@ -10,6 +10,7 @@ public class Berapa {
     private PriceCalculator priceCalculator = new PriceCalculator();
     private CurrencyFormatter currencyFormatter = new CurrencyFormatter();
 
+
     public List<PriceItem> getItems(String message){
         ArrayList<PriceItem> items = new ArrayList<>();
         ArrayList<String> itemArrayStrings = new ArrayList<>(Arrays.asList(message.split("\n")));

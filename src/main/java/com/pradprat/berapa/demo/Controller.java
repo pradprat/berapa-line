@@ -55,11 +55,11 @@ public class Controller {
                         replyText(messageEvent.getReplyToken(), "bacod");
                     }
                     if (textMessageContent.getText().contains("berapa")) {
-                        replyFlexMessage(messageEvent.getReplyToken(), new Berapa().getItems(textMessageContent.getText()));
+                        replyFlexMessage(messageEvent.getReplyToken(), textMessageContent.getText());
 //                        replyText(messageEvent.getReplyToken(), new Berapa().getFinalPrice(textMessageContent.getText()));
                     }
                     if (textMessageContent.getText().equals("flex")) {
-                        replyFlexMessage(messageEvent.getReplyToken(), new Berapa().getItems(textMessageContent.getText()));
+                        replyFlexMessage(messageEvent.getReplyToken(), textMessageContent.getText());
                     } else {
                         replyText(messageEvent.getReplyToken(), textMessageContent.getText());
                     }
@@ -88,13 +88,15 @@ public class Controller {
         reply(replyMessage);
     }
 
-    private void replyFlexMessage(String replyToken, List<PriceItem> items) {
+    private void replyFlexMessage(String replyToken, String message) {
+        Berapa berapa = new Berapa();
+        List<PriceItem> items = berapa.getItems(message);
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("berapa_flex.json"));
 
             flexTemplate = String.format(flexTemplate,
-                    items.get(0).getNumber(), items.get(1).getNumber(), items.get(2).getNumber(), items.get(0).getNumber()
+                    items.get(0).getNumber(), items.get(1).getNumber(), items.get(2).getNumber(), berapa.getFinalPrice(message)
             );
 
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();

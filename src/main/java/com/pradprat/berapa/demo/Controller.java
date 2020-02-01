@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -57,7 +58,7 @@ public class Controller {
                         replyText(messageEvent.getReplyToken(), new Berapa().getFinalPrice(textMessageContent.getText()));
                     }
                     if (textMessageContent.getText().equals("flex")) {
-                        replyFlexMessage(messageEvent.getReplyToken());
+                        replyFlexMessage(messageEvent.getReplyToken(), new Berapa().getItems(textMessageContent.getText()));
                     } else {
                         replyText(messageEvent.getReplyToken(), textMessageContent.getText());
                     }
@@ -87,10 +88,14 @@ public class Controller {
         reply(replyMessage);
     }
 
-    private void replyFlexMessage(String replyToken) {
+    private void replyFlexMessage(String replyToken, List<PriceItem> items) {
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("berapa_flex.json"));
+
+            flexTemplate = String.format(flexTemplate,
+                    items.get(0).getNumber(), items.get(1).getNumber(), items.get(2).getNumber()
+            );
 
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
             FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);

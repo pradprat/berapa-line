@@ -90,19 +90,21 @@ public class Controller {
 
     private void replyFlexMessage(String replyToken, String message) {
         Berapa berapa = new Berapa();
-        List<PriceItem> items = berapa.getItems(message);
+        List<PriceItem> finalItems = berapa.getFinalPrice(message);
+
+
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("berapa_flex.json"));
 
             flexTemplate = String.format(flexTemplate,
-                    items.get(0).getNumber(), items.get(1).getNumber(), items.get(2).getNumber(), berapa.getFinalPrice(message)
+                    finalItems.get(0).getNumber(), finalItems.get(1).getNumber(), finalItems.get(2).getNumber(), finalItems.get(finalItems.size() - 1).getFormattedNubmer()
             );
 
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
             FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);
 
-            ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("Dicoding Academy", flexContainer));
+            ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("finalPrice", flexContainer));
             reply(replyMessage);
         } catch (IOException e) {
             throw new RuntimeException(e);

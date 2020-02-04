@@ -99,7 +99,7 @@ public class Controller {
             String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("berapa_flex.json"));
 
             flexTemplate = String.format(flexTemplate,
-                    items.get(0).getNumber(), items.get(1).getNumber(), items.get(2).getNumber(), final_price
+                    items.get(0).getFormattedNubmer(), items.get(1).getFormattedNubmer(), items.get(2).getFormattedNubmer(), final_price
             );
 
 

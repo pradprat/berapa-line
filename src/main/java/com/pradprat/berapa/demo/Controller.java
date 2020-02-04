@@ -102,6 +102,7 @@ public class Controller {
                     items.get(0).getNumber(), items.get(1).getNumber(), items.get(2).getNumber(), final_price
             );
 
+
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
             FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);
 

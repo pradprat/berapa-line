@@ -25,7 +25,7 @@ public class Berapa {
     }
 
     public double getFinalPrice(String message) {
-        long totalPrice = 0;
+        double totalPrice = 0;
         ArrayList<PriceItem> items = new ArrayList<>();
         items.addAll(getItems(message));
         for (int i = 0; i < items.size(); i++) {

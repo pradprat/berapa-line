@@ -20,20 +20,17 @@ public class Berapa {
             String userText = itemSplit[1];
             itemSplit[1] = itemSplit[1].replace("%", "");
             items.add(new PriceItem(itemSplit[0], Integer.parseInt(itemSplit[1]), userText));
-//            System.out.println(item);
         });
-//        System.out.println(items.get(0).getNumber());
         return items;
     }
 
-    public List<PriceItem> getFinalPrice(String message) {
+    public double getFinalPrice(String message) {
         long totalPrice = 0;
         ArrayList<PriceItem> items = new ArrayList<>();
         items.addAll(getItems(message));
         for (int i = 0; i < items.size(); i++) {
             totalPrice = priceCalculator.addItem(totalPrice, items.get(i));
         }
-        items.add(new PriceItem("final_price", totalPrice, ""));
-        return items;
+        return totalPrice;
     }
 }

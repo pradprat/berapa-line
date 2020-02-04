@@ -90,16 +90,17 @@ public class Controller {
 
     private void replyFlexMessage(String replyToken, String message) {
         Berapa berapa = new Berapa();
-        List<PriceItem> finalItems = berapa.getFinalPrice(message);
+        List<PriceItem> items = berapa.getItems(message);
+        double final_price = berapa.getFinalPrice(message);
 
 
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("berapa_flex.json"));
 
-//            flexTemplate = String.format(flexTemplate,
-//                    finalItems.get(0).getNumber(), finalItems.get(1).getNumber(), finalItems.get(2).getNumber(), finalItems.get(finalItems.size() - 1).getFormattedNubmer()
-//            );
+            flexTemplate = String.format(flexTemplate,
+                    items.get(0).getNumber(), items.get(1).getNumber(), items.get(2).getNumber(), final_price
+            );
 
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
             FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);

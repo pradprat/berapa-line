@@ -2,10 +2,10 @@ package com.pradprat.berapa.demo;
 
 public class PriceItem {
     private String name;
-    private Long number;
+    private double number;
     private String formattedNubmer;
 
-    public PriceItem(String name, long number, String formattedNubmer) {
+    public PriceItem(String name, double number, String formattedNubmer) {
         this.name = name;
         this.number = number;
         this.formattedNubmer = formattedNubmer;
@@ -20,7 +20,7 @@ public class PriceItem {
         this.name = name;
     }
 
-    public Long getNumber() {
+    public double getNumber() {
         return number;
     }
 

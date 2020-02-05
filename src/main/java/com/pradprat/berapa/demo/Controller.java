@@ -96,16 +96,14 @@ public class Controller {
         ArrayList<String> formattedItem = new ArrayList<>();
         items.forEach(priceItem -> {
             if (priceItem.getName().equals("harga")) {
-                formattedItem.set(0, priceItem.getFormattedNubmer());
+                formattedItem.add(0, priceItem.getFormattedNubmer());
             } else if (priceItem.getName().equals("diskon")) {
-                formattedItem.set(1, priceItem.getFormattedNubmer());
+                formattedItem.add(1, priceItem.getFormattedNubmer());
             } else if (priceItem.getName().equals("pajak")) {
-                formattedItem.set(2, priceItem.getFormattedNubmer());
+                formattedItem.add(2, priceItem.getFormattedNubmer());
 
             }
         });
-
-
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("berapa_flex.json"));

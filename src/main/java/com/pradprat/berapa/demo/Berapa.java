@@ -47,6 +47,7 @@ public class Berapa {
                     temp[1] = "";
                 }
                 priceItem.setFormattedNubmer(temp[1] + priceItem.getFormattedNubmer());
+                temp[1] = temp[1] + priceItem.getFormattedNubmer();
                 temp[0] = "diskon";
             } else if (priceItem.getName().equals("pajak")) {
                 if (temp[0].equals("pajak")) {
@@ -56,6 +57,7 @@ public class Berapa {
                     temp[1] = "";
                 }
                 priceItem.setFormattedNubmer(temp[1] + priceItem.getFormattedNubmer());
+                temp[1] = temp[1] + priceItem.getFormattedNubmer();
                 temp[0] = "pajak";
             }
         });

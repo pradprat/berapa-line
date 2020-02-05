@@ -2,10 +2,9 @@ package com.pradprat.berapa.demo.utils;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.ParseException;
 
 public class CurrencyFormatter {
-    public String rupiah(long harga){
+    public String rupiah(double harga) {
 
         DecimalFormat kursIndonesia = (DecimalFormat) DecimalFormat.getCurrencyInstance();
         DecimalFormatSymbols formatRp = new DecimalFormatSymbols();

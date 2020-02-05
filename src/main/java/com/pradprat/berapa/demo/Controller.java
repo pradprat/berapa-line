@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -90,8 +91,19 @@ public class Controller {
 
     private void replyFlexMessage(String replyToken, String message) {
         Berapa berapa = new Berapa();
-        List<PriceItem> items = berapa.getItems(message);
+        List<PriceItem> items = berapa.getFormattedItems(berapa.getItems(message));
         double final_price = berapa.getFinalPrice(message);
+        ArrayList<String> formattedItem = new ArrayList<>();
+        items.forEach(priceItem -> {
+            if (priceItem.getName().equals("harga")) {
+                formattedItem.set(0, priceItem.getFormattedNubmer());
+            } else if (priceItem.getName().equals("diskon")) {
+                formattedItem.set(1, priceItem.getFormattedNubmer());
+            } else if (priceItem.getName().equals("pajak")) {
+                formattedItem.set(2, priceItem.getFormattedNubmer());
+
+            }
+        });
 
 
         try {
@@ -99,7 +111,7 @@ public class Controller {
             String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("berapa_flex.json"));
 
             flexTemplate = String.format(flexTemplate,
-                    items.get(0).getFormattedNubmer(), items.get(1).getFormattedNubmer(), items.get(2).getFormattedNubmer(), final_price
+                    formattedItem.get(0), formattedItem.get(1), formattedItem.get(2), final_price
             );
 
 

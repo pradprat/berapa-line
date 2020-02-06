@@ -10,6 +10,7 @@ import com.linecorp.bot.model.message.FlexMessage;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.flex.container.FlexContainer;
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper;
+import com.pradprat.berapa.demo.utils.CurrencyFormatter;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,11 +57,11 @@ public class Controller {
                         replyText(messageEvent.getReplyToken(), "bacod");
                     }
                     if (textMessageContent.getText().contains("berapa")) {
-                        replyFlexMessage(messageEvent.getReplyToken(), textMessageContent.getText());
+                        replyFlexBerapa(messageEvent.getReplyToken(), textMessageContent.getText());
 //                        replyText(messageEvent.getReplyToken(), new Berapa().getFinalPrice(textMessageContent.getText()));
                     }
                     if (textMessageContent.getText().equals("flex")) {
-                        replyFlexMessage(messageEvent.getReplyToken(), textMessageContent.getText());
+                        replyFlexBerapa(messageEvent.getReplyToken(), textMessageContent.getText());
                     } else {
                         replyText(messageEvent.getReplyToken(), textMessageContent.getText());
                     }
@@ -89,7 +90,8 @@ public class Controller {
         reply(replyMessage);
     }
 
-    private void replyFlexMessage(String replyToken, String message) {
+    private void replyFlexBerapa(String replyToken, String message) {
+        CurrencyFormatter currencyFormatter = new CurrencyFormatter();
         Berapa berapa = new Berapa();
         List<PriceItem> items = berapa.getFormattedItems(berapa.getItems(message));
         double final_price = berapa.getFinalPrice(message);
@@ -109,14 +111,14 @@ public class Controller {
             String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("berapa_flex.json"));
 
             flexTemplate = String.format(flexTemplate,
-                    formattedItem.get(0), formattedItem.get(1), formattedItem.get(2), final_price
+                    formattedItem.get(0), formattedItem.get(1), formattedItem.get(2), currencyFormatter.rupiah(final_price)
             );
 
 
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
             FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);
 
-            ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("finalPrice", flexContainer));
+            ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("" + final_price, flexContainer));
             reply(replyMessage);
         } catch (IOException e) {
             throw new RuntimeException(e);

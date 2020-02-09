@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 public class Controller {
@@ -97,24 +98,26 @@ public class Controller {
     }
 
     private void replyFlexBerapa(String replyToken, String message) {
-        ArrayList<String> formattedItem = new ArrayList<>();
+        AtomicReference<String> price = new AtomicReference<>("");
+        AtomicReference<String> discount = new AtomicReference<>("0%");
+        AtomicReference<String> tax = new AtomicReference<>("0%");
 
         List<PriceItem> items = berapa.getFormattedItems(berapa.getItems(message));
         double final_price = berapa.getFinalPrice(message);
         items.forEach(priceItem -> {
             if (priceItem.getName().equals("harga")) {
-                formattedItem.add(0, priceItem.getFormattedNubmer());
+                price.set(priceItem.getFormattedNubmer());
             } else if (priceItem.getName().equals("diskon")) {
-                formattedItem.add(1, priceItem.getFormattedNubmer());
+                discount.set(priceItem.getFormattedNubmer());
             } else if (priceItem.getName().equals("pajak")) {
-                formattedItem.add(2, priceItem.getFormattedNubmer());
+                tax.set(priceItem.getFormattedNubmer());
             }
         });
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("berapa_flex.json"));
             flexTemplate = String.format(flexTemplate,
-                    formattedItem.get(0), formattedItem.get(1), formattedItem.get(2), currencyFormatter.rupiah(final_price)
+                    price.get(), discount.get(), tax.get(), currencyFormatter.rupiah(final_price)
             );
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
             FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);

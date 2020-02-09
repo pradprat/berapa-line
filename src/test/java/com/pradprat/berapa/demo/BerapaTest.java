@@ -51,12 +51,10 @@ class BerapaTest {
 	@Test
 	void testgetFormattedItems() {
 		String message = "berapa\n" +
-				"harga 10000\n" +
-				"diskon 50%\n" +
-				"diskon 50%\n" +
-				"pajak 50%\n" +
-				"pajak 10%";
-		List<PriceItem> items = berapa.getFormattedItems(berapa.getItems(message));
+                "harga 10000\n" +
+                "diskon 50%\n" +
+                "diskon 50%\n";
+        List<PriceItem> items = berapa.getFormattedItems(berapa.getItems(message));
 		items.forEach(priceItem -> {
 			System.out.println(priceItem.getFormattedNubmer());
 		});

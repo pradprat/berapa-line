@@ -25,6 +25,9 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 public class Controller {
+    CurrencyFormatter currencyFormatter = new CurrencyFormatter();
+    Berapa berapa = new Berapa();
+
 
     @Autowired
     @Qualifier("lineMessagingClient")
@@ -57,8 +60,11 @@ public class Controller {
                         replyText(messageEvent.getReplyToken(), "bacod");
                     }
                     if (textMessageContent.getText().contains("berapa")) {
-                        replyFlexBerapa(messageEvent.getReplyToken(), textMessageContent.getText());
-//                        replyText(messageEvent.getReplyToken(), new Berapa().getFinalPrice(textMessageContent.getText()));
+                        if (textMessageContent.getText().contains("diskon")) {
+                            replyFlexBerapa(messageEvent.getReplyToken(), textMessageContent.getText());
+                        } else if (textMessageContent.getText().contains("cashback")) {
+                            replyFlexCashback(messageEvent.getReplyToken(), textMessageContent.getText());
+                        }
                     }
                     if (textMessageContent.getText().equals("flex")) {
                         replyFlexBerapa(messageEvent.getReplyToken(), textMessageContent.getText());
@@ -91,11 +97,10 @@ public class Controller {
     }
 
     private void replyFlexBerapa(String replyToken, String message) {
-        CurrencyFormatter currencyFormatter = new CurrencyFormatter();
-        Berapa berapa = new Berapa();
+        ArrayList<String> formattedItem = new ArrayList<>();
+
         List<PriceItem> items = berapa.getFormattedItems(berapa.getItems(message));
         double final_price = berapa.getFinalPrice(message);
-        ArrayList<String> formattedItem = new ArrayList<>();
         items.forEach(priceItem -> {
             if (priceItem.getName().equals("harga")) {
                 formattedItem.add(0, priceItem.getFormattedNubmer());
@@ -103,21 +108,46 @@ public class Controller {
                 formattedItem.add(1, priceItem.getFormattedNubmer());
             } else if (priceItem.getName().equals("pajak")) {
                 formattedItem.add(2, priceItem.getFormattedNubmer());
-
             }
         });
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("berapa_flex.json"));
-
             flexTemplate = String.format(flexTemplate,
                     formattedItem.get(0), formattedItem.get(1), formattedItem.get(2), currencyFormatter.rupiah(final_price)
             );
-
-
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
             FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);
+            ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("" + final_price, flexContainer));
+            reply(replyMessage);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    private void replyFlexCashback(String replyToken, String message) {
+        ArrayList<String> formattedItem = new ArrayList<>();
+
+        List<PriceItem> items = berapa.getFormattedItems(berapa.getItems(message));
+        double final_price = berapa.getFinalCashbackPrice(message);
+        double final_cashback = berapa.getFinalCashback(message);
+
+        items.forEach(priceItem -> {
+            if (priceItem.getName().equals("harga")) {
+                formattedItem.add(0, priceItem.getFormattedNubmer());
+            } else if (priceItem.getName().equals("cashback")) {
+                formattedItem.add(1, priceItem.getFormattedNubmer());
+            }
+        });
+
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("cashback_flex.json"));
+            flexTemplate = String.format(flexTemplate,
+                    formattedItem.get(0), formattedItem.get(1), currencyFormatter.rupiah(final_cashback), currencyFormatter.rupiah(final_price)
+            );
+            ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
+            FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);
             ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("" + final_price, flexContainer));
             reply(replyMessage);
         } catch (IOException e) {

@@ -29,9 +29,35 @@ public class Berapa {
         ArrayList<PriceItem> items = new ArrayList<>();
         items.addAll(getItems(message));
         for (int i = 0; i < items.size(); i++) {
-            totalPrice = priceCalculator.addItem(totalPrice, items.get(i));
+            totalPrice = priceCalculator.addBerapaItem(totalPrice, items.get(i));
         }
         return totalPrice;
+    }
+
+    public double getFinalCashbackPrice(String message) {
+        double totalCashbackPrice = 0;
+        ArrayList<PriceItem> items = new ArrayList<>();
+        items.addAll(getItems(message));
+        for (int i = 0; i < items.size(); i++) {
+            totalCashbackPrice = priceCalculator.addBerapaItem(totalCashbackPrice, items.get(i));
+        }
+        return totalCashbackPrice;
+    }
+
+    public double getFinalCashback(String message) {
+        final double[] totalCashback = {0};
+        ArrayList<PriceItem> items = new ArrayList<>();
+        items.addAll(getItems(message));
+        for (int i = 0; i < items.size(); i++) {
+            totalCashback[0] = priceCalculator.countCashback(totalCashback[0], items.get(i));
+        }
+        items.forEach(priceItem -> {
+            if (priceItem.getName().equals("harga")) {
+                totalCashback[0] = totalCashback[0] - priceItem.getNumber();
+            }
+        });
+
+        return totalCashback[0];
     }
 
     public List<PriceItem> getFormattedItems(List<PriceItem> items) {
@@ -53,6 +79,19 @@ public class Berapa {
                 temp[1] = temp[1] + priceItem.getFormattedNubmer();
                 temp[0] = "diskon";
             } else if (priceItem.getName().equals("pajak")) {
+                if (!priceItem.getFormattedNubmer().contains("%")) {
+                    priceItem.setFormattedNubmer(priceItem.getFormattedNubmer() + "%");
+                }
+                if (temp[0].equals("pajak")) {
+                    temp[1] = temp[1] + "+";
+                } else {
+                    temp[0] = "";
+                    temp[1] = "";
+                }
+                priceItem.setFormattedNubmer(temp[1] + priceItem.getFormattedNubmer());
+                temp[1] = temp[1] + priceItem.getFormattedNubmer();
+                temp[0] = "pajak";
+            } else if (priceItem.getName().equals("cashback")) {
                 if (!priceItem.getFormattedNubmer().contains("%")) {
                     priceItem.setFormattedNubmer(priceItem.getFormattedNubmer() + "%");
                 }

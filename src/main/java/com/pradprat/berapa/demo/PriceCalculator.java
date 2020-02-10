@@ -3,7 +3,7 @@ package com.pradprat.berapa.demo;
 public class PriceCalculator {
 
     public double addBerapaItem(double normal, PriceItem priceItem) {
-        switch (priceItem.getName()) {
+        switch (priceItem.getName().toLowerCase()) {
             case "diskon":
                 return normal - (normal * priceItem.getNumber() / 100);
             case "pajak":
@@ -18,7 +18,7 @@ public class PriceCalculator {
     }
 
     public double countCashback(double normal, PriceItem priceItem) {
-        switch (priceItem.getName()) {
+        switch (priceItem.getName().toLowerCase()) {
             case "cashback":
                 return normal + (normal * priceItem.getNumber() / 100);
             case "harga":

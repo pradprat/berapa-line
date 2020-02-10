@@ -11,6 +11,7 @@ import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.flex.container.FlexContainer;
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper;
 import com.pradprat.berapa.demo.utils.CurrencyFormatter;
+import com.pradprat.berapa.demo.utils.Help;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,6 +29,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Controller {
     CurrencyFormatter currencyFormatter = new CurrencyFormatter();
     Berapa berapa = new Berapa();
+    Help help = new Help();
 
 
     @Autowired
@@ -57,17 +59,23 @@ public class Controller {
                     MessageEvent messageEvent = (MessageEvent) event;
                     TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
 
-                    if (textMessageContent.getText().equals("hai")) {
-                        replyText(messageEvent.getReplyToken(), "bacod");
+                    if (textMessageContent.getText().toLowerCase().contains("help")) {
+                        if (textMessageContent.getText().toLowerCase().contains("berapa")) {
+                            replyText(messageEvent.getReplyToken(), help.help_berapa);
+                        } else if (textMessageContent.getText().toLowerCase().contains("cashback")) {
+                            replyText(messageEvent.getReplyToken(), help.help_cashback);
+                        } else {
+                            replyText(messageEvent.getReplyToken(), help.help);
+                        }
                     }
-                    if (textMessageContent.getText().contains("berapa")) {
-                        if (textMessageContent.getText().contains("diskon")) {
+                    if (textMessageContent.getText().toLowerCase().contains("berapa")) {
+                        if (textMessageContent.getText().toLowerCase().contains("diskon") || textMessageContent.getText().toLowerCase().contains("pajak")) {
                             replyFlexBerapa(messageEvent.getReplyToken(), textMessageContent.getText());
-                        } else if (textMessageContent.getText().contains("cashback")) {
+                        } else if (textMessageContent.getText().toLowerCase().contains("cashback")) {
                             replyFlexCashback(messageEvent.getReplyToken(), textMessageContent.getText());
                         }
                     }
-                    if (textMessageContent.getText().equals("flex")) {
+                    if (textMessageContent.getText().toLowerCase().equals("flex")) {
                         replyFlexBerapa(messageEvent.getReplyToken(), textMessageContent.getText());
                     } else {
                         replyText(messageEvent.getReplyToken(), textMessageContent.getText());
@@ -105,11 +113,11 @@ public class Controller {
         List<PriceItem> items = berapa.getFormattedItems(berapa.getItems(message));
         double final_price = berapa.getFinalPrice(message);
         items.forEach(priceItem -> {
-            if (priceItem.getName().equals("harga")) {
+            if (priceItem.getName().toLowerCase().equals("harga")) {
                 price.set(priceItem.getFormattedNubmer());
-            } else if (priceItem.getName().equals("diskon")) {
+            } else if (priceItem.getName().toLowerCase().equals("diskon")) {
                 discount.set(priceItem.getFormattedNubmer());
-            } else if (priceItem.getName().equals("pajak")) {
+            } else if (priceItem.getName().toLowerCase().equals("pajak")) {
                 tax.set(priceItem.getFormattedNubmer());
             }
         });
@@ -136,9 +144,9 @@ public class Controller {
         double final_cashback = berapa.getFinalCashback(message);
 
         items.forEach(priceItem -> {
-            if (priceItem.getName().equals("harga")) {
+            if (priceItem.getName().toLowerCase().equals("harga")) {
                 formattedItem.add(0, priceItem.getFormattedNubmer());
-            } else if (priceItem.getName().equals("cashback")) {
+            } else if (priceItem.getName().toLowerCase().equals("cashback")) {
                 formattedItem.add(1, priceItem.getFormattedNubmer());
             }
         });

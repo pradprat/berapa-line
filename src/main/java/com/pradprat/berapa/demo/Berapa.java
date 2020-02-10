@@ -19,6 +19,7 @@ public class Berapa {
             String[] itemSplit = item.split(" ");
             String userText = itemSplit[1];
             itemSplit[1] = itemSplit[1].replace("%", "");
+            itemSplit[1] = itemSplit[1].replace(".", "");
             items.add(new PriceItem(itemSplit[0], Integer.parseInt(itemSplit[1]), userText));
         });
         return items;

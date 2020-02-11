@@ -64,7 +64,7 @@
       },
       {
         "type": "separator",
-        "margin": "xxl"
+        "margin": "md"
       },
       {
         "type": "box",
@@ -85,11 +85,12 @@
             "margin": "md",
             "wrap": true
           }
-        ]
+        ],
+        "margin": "md"
       },
       {
         "type": "separator",
-        "margin": "xxl"
+        "margin": "md"
       },
       {
         "type": "box",
@@ -110,7 +111,8 @@
             "margin": "md",
             "wrap": true
           }
-        ]
+        ],
+        "margin": "md"
       }
     ]
   },

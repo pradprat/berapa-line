@@ -70,9 +70,17 @@ public class Controller {
                     }
                     if (textMessageContent.getText().toLowerCase().contains("berapa")) {
                         if (textMessageContent.getText().toLowerCase().contains("diskon") || textMessageContent.getText().toLowerCase().contains("pajak")) {
-                            replyFlexBerapa(messageEvent.getReplyToken(), textMessageContent.getText());
+                            try {
+                                replyFlexBerapa(messageEvent.getReplyToken(), textMessageContent.getText());
+                            } catch (Exception e) {
+                                replyText(messageEvent.getReplyToken(), help.help_berapa);
+                            }
                         } else if (textMessageContent.getText().toLowerCase().contains("cashback")) {
-                            replyFlexCashback(messageEvent.getReplyToken(), textMessageContent.getText());
+                            try {
+                                replyFlexCashback(messageEvent.getReplyToken(), textMessageContent.getText());
+                            } catch (Exception e) {
+                                replyText(messageEvent.getReplyToken(), help.help_cashback);
+                            }
                         }
                     }
                     if (textMessageContent.getText().toLowerCase().equals("flex")) {
